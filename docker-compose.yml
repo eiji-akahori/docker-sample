@@ -1,0 +1,117 @@
+version: "2"
+services:
+
+  sample_nginx:
+    image:
+      sample/nginx
+    build:
+      build/nginx
+    ports:
+      - 80:80
+    container_name:
+      sample_nginx
+    depends_on:
+      - sample_app
+    volumes:
+      - ./volumes/nginx/log:/var/log/nginx:rw
+
+  sample_app:
+    image:
+      sample/app 
+    build:
+      build/app
+    container_name:
+      sample_app
+    depends_on:
+      - sample_mysql
+      - sample_redis
+    environment:
+      APP_ENV: local
+    volumes:
+      - ./project:/home/docker/project:ro
+#     - ./volumes/app/log:/var/log/app:rw
+
+#  sample_mysql:
+#    image:
+#      sample/mysql
+#    build:
+#      build/mysql
+#    container_name:
+#      sample_mysql
+#    volumes:
+#      - ./volumes/mysql/data:/var/lib/mysql:rw
+#      - ./volumes/mysql/log:/var/log/mysql:rw
+  sample_mysql:
+    image:
+      mysql:5.7
+    container_name:
+      sample_mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=sample
+      - MYSQL_PASSWORD=sample
+    volumes:
+      - ./volumes/mysql/data:/var/lib/mysql:rw
+      - ./volumes/mysql/conf.d:/etc/mysql/conf.d:ro
+      - ./volumes/mysql/initdb.d:/docker-entrypoint-initdb.d/
+#     - ./volumes/mysql/log:/var/log/mysql:rw
+
+  sample_redis:
+    image:
+      sample/redis
+    build:
+      build/redis
+    container_name:
+      sample_redis
+    volumes:
+      - ./volumes/redis/data:/var/lib/redis:rw
+      - ./volumes/redis/log:/var/log/redis:rw
+
+  sample_fluentd:
+    image: sample/fluentd
+    build:
+      context: build/fluentd
+    volumes:
+      # sample_nginxログをマウントします
+      - ./volumes/nginx/log:/var/log/nginx:ro
+#     - ./volumes/fluentd/log/:/fluentd/log
+    depends_on:
+      - sample_elasticsearch
+    container_name:
+      sample_fluentd
+
+  sample_elasticsearch:
+    image:
+      elasticsearch:5
+#   ports:
+#     - 9200:9200
+#     - 9300:9300
+#   volumes:
+#     - ./volumes/elasticsearch/data:/usr/share/elasticsearch/data/
+    container_name:
+      sample_elasticsearch
+
+  sample_kibana:
+    image:
+      kibana:5
+    ports:
+      - 5601:5601
+    depends_on:
+      - sample_elasticsearch
+    environment:
+      - ELASTICSEARCH_URL=http://sample_elasticsearch:9200
+    container_name:
+      sample_kibana
+
+  sample_myadmin:
+    image:
+      phpmyadmin/phpmyadmin
+    ports:
+      - 8080:80
+    depends_on:
+      - sample_mysql
+    links:
+      - sample_mysql:db
+    container_name:
+      sample_myadmin
+    
