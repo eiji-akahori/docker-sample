@@ -9,6 +9,8 @@
 - kibana 5
 - phpmyadmin (latest)
 
+elasticsearchがメモリを結構消費するので4Gぐらいは必要そうです。
+
 ## nginx
 
 CentOS7 に epelリポジトリを追加して、nginx を yumインストール、confファイルの差し替えをしています
@@ -18,8 +20,11 @@ CentOS7 に epelリポジトリを追加して、nginx を yumインストール
 ## app
 
 CentOS7 に epelリポジトリを追加して php-fpm 7.2, phalcon3 の構築をします
+
 その他のphpモジュールなどはbuild/app/Dockerfile参照
+
 ホストのprojectディレクトリを/home/docker/projectでマウントしています。
+
 nginxのfastcgiのパスもこれに合わせて設定しておきます。
 
 ## mysql
@@ -38,7 +43,9 @@ CentoOS7 + 4.0ソースで構築してます
 ## fluentd
 
 ビルド済みイメージ使ってます(fluent/fluentd)
+
 elasticsearchのプラグインを入れたりするので、そこからさらにビルドをおこなっています。
+
 fluentd.conf も書き換えしています
 
 nginxコンテナのログディレクトリをホストのディレクトリでマウントしておき、
@@ -49,16 +56,21 @@ nginxコンテナのログディレクトリをホストのディレクトリで
 ## elasticsearch
 
 公式イメージ
-特になもしていません
+
+特に設定なし
+
 APIはkibanaからしかアクセスしないのでポートフォワードなども設定してません
 
 ## kibana
 
 公式イメージ
+
 特に設定なし
+
 5601 でポートフォワードしています
 
 ## phpmyadmin
 
 ビルド済みイメージ(phpmyadmin/phpmyadmin)
+
 8080 -> 80 にポートフォワードしてます
