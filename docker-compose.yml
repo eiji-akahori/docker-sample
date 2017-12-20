@@ -51,9 +51,9 @@ services:
       - MYSQL_USER=sample
       - MYSQL_PASSWORD=sample
     volumes:
+      - ./configs/mysql/conf.d:/etc/mysql/conf.d:ro
+      - ./configs/mysql/initdb.d:/docker-entrypoint-initdb.d:ro
       - ./volumes/mysql/data:/var/lib/mysql:rw
-      - ./volumes/mysql/conf.d:/etc/mysql/conf.d:ro
-      - ./volumes/mysql/initdb.d:/docker-entrypoint-initdb.d/
 #     - ./volumes/mysql/log:/var/log/mysql:rw
 
   sample_redis:
