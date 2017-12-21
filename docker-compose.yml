@@ -31,6 +31,18 @@ services:
       - ./project:/home/docker/project:ro
 #     - ./volumes/app/log:/var/log/app:rw
 
+  sample_admin:
+    image:
+      sample/admin
+    build:
+      build/admin
+    container_name:
+      sample_admin
+    environment:
+      APP_ENV: local
+    volumes:
+      - ./project:/home/docker/project:ro
+
 #  sample_mysql:
 #    image:
 #      sample/mysql
