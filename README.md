@@ -17,15 +17,21 @@ CentOS7 に epelリポジトリを追加して、nginx を yumインストール
 
 ※公式イメージでもコンテナの/etc/nginx/ 以下のconfディレクトリをホストのディレクトリで上書きマウントすれば自分でイメージ作成する必要がないかも？
 
-## app
+## app (php-fpm)
 
-CentOS7 に epelリポジトリを追加して php-fpm 7.2, phalcon3 の構築をします
+CentOS7 に epel, remi リポジトリを追加して php-fpm 7.2, phalcon3 の構築をします
 
 その他のphpモジュールなどはbuild/app/Dockerfile参照
 
 ホストのprojectディレクトリを/home/docker/projectでマウントしています。
 
 nginxのfastcgiのパスもこれに合わせて設定しておきます。
+
+## admin
+
+CentOS7 に epel, remi リポジトリを追加して php-cli 7.2, phalcon3, phalcon-devtools の構築を行います
+
+コマンドライン作業用コンテナで、起動用に admin.sh が用意されています。
 
 ## mysql
 
